@@ -30,7 +30,7 @@ app.get('/photos', (req, res) => {
         } else { // Key does not exist in Redis store
  
             // Fetch directly from remote api
-            fetch('https://jsonplaceholder.typicode.com/photos')
+            fetch('http://dummy.restapiexample.com/api/v1/employees')
                 .then(response => response.json())
                 .then(photos => {
  
