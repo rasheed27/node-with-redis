@@ -13,32 +13,32 @@ client.on('error', (err) => {
     console.log("Error " + err)
 });
  
-// get photos list
-app.get('/photos', (req, res) => {
+// get employees list
+app.get('/employees', (req, res) => {
  
     // key to store results in Redis store
-    const photosRedisKey = 'user:photos';
+    const employeesRedisKey = 'employees';
  
     // Try fetching the result from Redis first in case we have it cached
-    return client.get(photosRedisKey, (err, photos) => {
+    return client.get(employeesRedisKey, (err, employees) => {
  
         // If that key exists in Redis store
-        if (photos) {
+        if (employees) {
  
-            return res.json({ source: 'cache', data: JSON.parse(photos) })
+            return res.json({ source: 'cache', data: JSON.parse(employees) })
  
         } else { // Key does not exist in Redis store
  
             // Fetch directly from remote api
             fetch('http://dummy.restapiexample.com/api/v1/employees')
                 .then(response => response.json())
-                .then(photos => {
+                .then(employees => {
  
                     // Save the  API response in Redis store,  data expire time in 3600 seconds, it means one hour
-                    client.setex(photosRedisKey, 3600, JSON.stringify(photos))
+                    client.setex(employeesRedisKey, 3600, JSON.stringify(employees))
  
                     // Send JSON response to client
-                    return res.json({ source: 'api', data: photos })
+                    return res.json({ source: 'api', data: employees})
  
                 })
                 .catch(error => {
